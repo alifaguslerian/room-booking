@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — RoomBook{% endblock %}
+{% block content %}
+<div class="page-header flex-between">
+    <div>
+        <h1>Welcome, {{ current_user.username }}</h1>
+        <p>Your booking overview</p>
+    </div>
+    <a href="{{ url_for('user.search') }}" class="btn btn-primary">+ New Booking</a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ stats.total }}</div>
+        <div class="stat-label">Total Bookings</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value text-warning">{{ stats.pending }}</div>
+        <div class="stat-label">Pending</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value text-success">{{ stats.approved }}</div>
+        <div class="stat-label">Approved</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title flex-between">
+        Recent Bookings
+        <a href="{{ url_for('user.my_bookings') }}" class="btn btn-outline btn-sm">View All</a>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Room</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                <tr>
+                    <td>{{ b.title }}</td>
+                    <td class="text-muted">{{ b.room_name }}</td>
+                    <td class="text-muted">{{ b.date }}</td>
+                    <td class="text-muted">{{ b.start_time }} – {{ b.end_time }}</td>
+                    <td><span class="badge badge-{{ b.status }}">{{ b.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-muted" style="text-align:center;padding:24px">
+                        No bookings yet. <a href="{{ url_for('user.search') }}" class="text-accent">Find a room</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

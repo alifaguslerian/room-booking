@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Book Room — RoomBook{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Book a Room</h1>
+    <p>Fill in the details for your booking request</p>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 300px;gap:32px;align-items:start">
+    <div class="card">
+        <div class="card-title">Booking Details</div>
+        <form method="POST">
+            <div class="form-group">
+                <label>Booking Title</label>
+                <input type="text" name="title" placeholder="e.g. Weekly Team Meeting" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" name="date" required
+                        min="{{ now.strftime('%Y-%m-%d') if now else '' }}">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Start Time</label>
+                    <input type="time" name="start_time" required>
+                </div>
+                <div class="form-group">
+                    <label>End Time</label>
+                    <input type="time" name="end_time" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Notes (optional)</label>
+                <textarea name="notes" placeholder="Any additional information..."></textarea>
+            </div>
+            <div class="flex gap-8">
+                <button type="submit" class="btn btn-primary">Submit Booking</button>
+                <a href="{{ url_for('user.search') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Room Info</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:3px">Room</div>
+                <div style="font-family:var(--font-serif);font-size:18px">{{ room.name }}</div>
+            </div>
+            <div>
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:3px">Location</div>
+                <div>{{ room.location }}</div>
+            </div>
+            <div>
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:3px">Capacity</div>
+                <div>{{ room.capacity }} pax</div>
+            </div>
+            <div>
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:3px">Facilities</div>
+                <div class="text-muted">{{ room.facilities }}</div>
+            </div>
+            <div>
+                <span class="badge badge-{{ room.status }}">{{ room.status }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

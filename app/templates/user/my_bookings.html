@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}My Bookings — RoomBook{% endblock %}
+{% block content %}
+<div class="page-header flex-between">
+    <div>
+        <h1>My Bookings</h1>
+        <p>All your booking requests</p>
+    </div>
+    <a href="{{ url_for('user.search') }}" class="btn btn-primary">+ New Booking</a>
+</div>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Room</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for b in bookings %}
+            <tr>
+                <td>{{ b.title }}</td>
+                <td>{{ b.room_name }}</td>
+                <td class="text-muted">{{ b.location }}</td>
+                <td class="text-muted">{{ b.date }}</td>
+                <td class="text-muted">{{ b.start_time }} – {{ b.end_time }}</td>
+                <td><span class="badge badge-{{ b.status }}">{{ b.status }}</span></td>
+                <td>
+                    {% if b.status == 'pending' %}
+                    <form method="POST" action="{{ url_for('user.cancel_booking', booking_id=b.id) }}"
+                        onsubmit="return confirm('Cancel this booking?')">
+                        <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                    </form>
+                    {% else %}
+                    <span class="text-muted" style="font-size:12px">—</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-muted" style="text-align:center;padding:24px">
+                    No bookings yet. <a href="{{ url_for('user.search') }}" class="text-accent">Book a room</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

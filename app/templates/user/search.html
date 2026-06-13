@@ -1,0 +1,62 @@
+{% extends "base.html" %} {% block title %}Find Room — RoomBook{% endblock %} {%
+block content %}
+<div class="page-header">
+  <h1>Find a Room</h1>
+  <p>Search available rooms by name, location, or facilities</p>
+</div>
+
+<form method="GET" action="{{ url_for('user.search') }}">
+  <div class="search-bar">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search by name, location, or facilities..."
+      value="{{ keyword }}"
+    />
+    <input
+      type="number"
+      name="capacity"
+      placeholder="Min capacity"
+      min="0"
+      value="{{ min_capacity if min_capacity else '' }}"
+      style="max-width: 140px"
+    />
+    <button type="submit">Search</button>
+  </div>
+</form>
+
+{% if rooms %}
+<div class="room-grid">
+  {% for r in rooms %}
+  <div class="room-card">
+    <h3>{{ r.name }}</h3>
+    <div class="room-meta">
+      <span>{{ r.location }}</span>
+      <span>Capacity: {{ r.capacity }} pax</span>
+      <span>{{ r.facilities }}</span>
+    </div>
+    <span class="badge badge-{{ r.status }}" style="align-self: flex-start"
+      >{{ r.status }}</span
+    >
+    <div class="room-actions">
+      <a
+        href="{{ url_for('user.book', room_id=r.id) }}"
+        class="btn btn-primary btn-sm"
+        >Book Now</a
+      >
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div style="text-align: center; padding: 60px 0; color: var(--text-muted)">
+  <p
+    style="font-family: var(--font-serif); font-size: 20px; margin-bottom: 8px"
+  >
+    No rooms found
+  </p>
+  <p style="font-size: 13px">
+    Try a different keyword or lower the minimum capacity
+  </p>
+</div>
+{% endif %} {% endblock %}

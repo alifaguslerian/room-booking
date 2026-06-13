@@ -1,3 +1,4 @@
+-- Active: 1781387499073@@127.0.0.1@3310@mysql
 CREATE DATABASE IF NOT EXISTS room_booking;
 
 USE room_booking;
