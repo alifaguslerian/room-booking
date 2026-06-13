@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}RoomBook{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    {% if current_user.is_authenticated %}
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <span class="brand-mark">RB</span>
+          <span class="brand-name">RoomBook</span>
+        </div>
+        <nav class="sidebar-nav">
+          {% if current_user.is_admin() %}
+          <a
+            href="{{ url_for('admin.dashboard') }}"
+            class="nav-item {% if request.endpoint == 'admin.dashboard' %}active{% endif %}"
+            >Dashboard</a
+          >
+          <a
+            href="{{ url_for('admin.rooms') }}"
+            class="nav-item {% if request.endpoint == 'admin.rooms' %}active{% endif %}"
+            >Rooms</a
+          >
+          <a
+            href="{{ url_for('admin.bookings') }}"
+            class="nav-item {% if request.endpoint == 'admin.bookings' %}active{% endif %}"
+            >Bookings</a
+          >
+          <a
+            href="{{ url_for('report.index') }}"
+            class="nav-item {% if request.endpoint == 'report.index' %}active{% endif %}"
+            >Report</a
+          >
+          {% else %}
+          <a
+            href="{{ url_for('user.dashboard') }}"
+            class="nav-item {% if request.endpoint == 'user.dashboard' %}active{% endif %}"
+            >Dashboard</a
+          >
+          <a
+            href="{{ url_for('user.search') }}"
+            class="nav-item {% if request.endpoint == 'user.search' %}active{% endif %}"
+            >Find Room</a
+          >
+          <a
+            href="{{ url_for('user.my_bookings') }}"
+            class="nav-item {% if request.endpoint == 'user.my_bookings' %}active{% endif %}"
+            >My Bookings</a
+          >
+          {% endif %}
+        </nav>
+        <div class="sidebar-footer">
+          <span class="user-info"
+            >{{ current_user.username }} <em>{{ current_user.role }}</em></span
+          >
+          <a href="{{ url_for('auth.logout') }}" class="btn-logout">Logout</a>
+        </div>
+      </aside>
+      <main class="main-content">
+        <div class="content-inner">
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %} {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock
+          %}
+        </div>
+      </main>
+    </div>
+    {% else %}
+    <main class="auth-layout">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %} {% block auth_content %}{% endblock
+      %}
+    </main>
+    {% endif %}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>
