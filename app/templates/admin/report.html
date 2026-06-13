@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Report — RoomBook{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Report</h1>
+    <p>Booking statistics and analytics</p>
+</div>
+
+<div class="stats-grid" style="margin-bottom:40px">
+    {% for s in status_stats %}
+    <div class="stat-card">
+        <div class="stat-value {% if s.status == 'approved' %}text-success{% elif s.status == 'pending' %}text-warning{% elif s.status == 'rejected' or s.status == 'cancelled' %}text-danger{% endif %}">
+            {{ s.count }}
+        </div>
+        <div class="stat-label">{{ s.status }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="form-row">
+    <div class="card">
+        <div class="card-title">Top Rooms by Booking</div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Room</th>
+                        <th>Approved Bookings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i, r in top_rooms|enumerate %}
+                    <tr>
+                        <td class="text-muted">{{ i + 1 }}</td>
+                        <td>{{ r.name }}</td>
+                        <td class="text-accent">{{ r.total }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="text-muted" style="text-align:center;padding:16px">No data.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Bookings per Month (This Year)</div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Total Bookings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] %}
+                    {% for m in monthly %}
+                    <tr>
+                        <td>{{ months[m.month - 1] }}</td>
+                        <td class="text-accent">{{ m.total }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="2" class="text-muted" style="text-align:center;padding:16px">No data.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

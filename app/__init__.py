@@ -24,5 +24,6 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(user_bp, url_prefix='/user')
     app.register_blueprint(report_bp, url_prefix='/report')
+    app.jinja_env.globals['enumerate'] = enumerate
 
     return app
