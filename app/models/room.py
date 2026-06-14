@@ -16,6 +16,8 @@ class Room:
         cur.execute("SELECT * FROM rooms ORDER BY created_at DESC")
         rows = cur.fetchall()
         cur.close()
+        if not rows:
+            return []
         return [Room(**r) for r in rows]
 
     @staticmethod

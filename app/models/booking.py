@@ -1,4 +1,19 @@
 from app import mysql
+import datetime
+
+
+def _td_to_str(td):
+    if td is None:
+        return "00:00"
+    if isinstance(td, str):
+        return td
+    if isinstance(td, datetime.timedelta):
+        total = int(td.total_seconds())
+        h = total // 3600
+        m = (total % 3600) // 60
+        return f"{h:02d}:{m:02d}"
+    return str(td)
+
 
 class Booking:
     def __init__(self, id, user_id, room_id, title, date, start_time, end_time,
@@ -8,12 +23,11 @@ class Booking:
         self.room_id = room_id
         self.title = title
         self.date = date
-        self.start_time = start_time
-        self.end_time = end_time
+        self.start_time = _td_to_str(start_time)
+        self.end_time = _td_to_str(end_time)
         self.status = status
         self.notes = notes
         self.created_at = created_at
-        # joined fields (username, room_name) kalau ada
         for k, v in kwargs.items():
             setattr(self, k, v)
 
