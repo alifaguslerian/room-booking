@@ -6,3 +6,5 @@ venv/
 *.db
 .DS_Store
 instance/
+app/static/img/rooms/*
+!app/static/img/rooms/.gitkeep
