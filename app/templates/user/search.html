@@ -29,6 +29,18 @@ block content %}
 <div class="room-grid">
   {% for r in rooms %}
   <div class="room-card">
+    {% if r.image_path %}
+    <div class="room-image">
+      <img
+        src="{{ url_for('static', filename=r.image_path) }}"
+        alt="{{ r.name }}"
+      />
+    </div>
+    {% else %}
+    <div class="room-image room-image-placeholder">
+      <span>No Image</span>
+    </div>
+    {% endif %}
     <h3>{{ r.name }}</h3>
     <div class="room-meta">
       <span>{{ r.location }}</span>

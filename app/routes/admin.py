@@ -1,10 +1,30 @@
+import os
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from app.models.room import Room
 from app.models.booking import Booking
 from functools import wraps
+from werkzeug.utils import secure_filename
 
 admin_bp = Blueprint('admin', __name__)
+
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), '..', 'static', 'img', 'rooms')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def save_image(file):
+    if file and allowed_file(file.filename):
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        filename = secure_filename(file.filename)
+        # tambahin timestamp biar ga collision
+        import time
+        name, ext = os.path.splitext(filename)
+        filename = f"{name}_{int(time.time())}{ext}"
+        file.save(os.path.join(UPLOAD_FOLDER, filename))
+        return f"img/rooms/{filename}"
+    return None
 
 def admin_required(f):
     @wraps(f)
@@ -14,7 +34,6 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated
 
-# Dashboard
 @admin_bp.route('/dashboard')
 @admin_required
 def dashboard():
@@ -28,7 +47,6 @@ def dashboard():
     }
     return render_template('admin/dashboard.html', stats=stats, bookings=bookings[:10])
 
-# Rooms
 @admin_bp.route('/rooms')
 @admin_required
 def rooms():
@@ -38,11 +56,13 @@ def rooms():
 @admin_bp.route('/rooms/add', methods=['POST'])
 @admin_required
 def add_room():
+    image_path = save_image(request.files.get('image'))
     Room.create(
         request.form.get('name'),
         request.form.get('location'),
         request.form.get('capacity'),
-        request.form.get('facilities')
+        request.form.get('facilities'),
+        image_path
     )
     flash('Room added.', 'success')
     return redirect(url_for('admin.rooms'))
@@ -50,13 +70,15 @@ def add_room():
 @admin_bp.route('/rooms/edit/<int:room_id>', methods=['POST'])
 @admin_required
 def edit_room(room_id):
+    image_path = save_image(request.files.get('image'))
     Room.update(
         room_id,
         request.form.get('name'),
         request.form.get('location'),
         request.form.get('capacity'),
         request.form.get('facilities'),
-        request.form.get('status')
+        request.form.get('status'),
+        image_path
     )
     flash('Room updated.', 'success')
     return redirect(url_for('admin.rooms'))
@@ -68,7 +90,6 @@ def delete_room(room_id):
     flash('Room deleted.', 'success')
     return redirect(url_for('admin.rooms'))
 
-# Bookings
 @admin_bp.route('/bookings')
 @admin_required
 def bookings():

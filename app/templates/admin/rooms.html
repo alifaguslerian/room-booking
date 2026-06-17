@@ -85,7 +85,11 @@ block content %}
       </button>
     </div>
     <div class="modal-body">
-      <form method="POST" action="{{ url_for('admin.add_room') }}">
+      <form
+        method="POST"
+        action="{{ url_for('admin.add_room') }}"
+        enctype="multipart/form-data"
+      >
         <div class="form-group">
           <label>Room Name</label>
           <input type="text" name="name" required />
@@ -105,6 +109,15 @@ block content %}
             placeholder="Projector, AC, Whiteboard..."
           ></textarea>
         </div>
+        <div class="form-group">
+          <label>Room Photo</label>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            style="padding: 8px"
+          />
+        </div>
         <button type="submit" class="btn btn-primary" style="width: 100%">
           Add Room
         </button>
@@ -123,7 +136,7 @@ block content %}
       </button>
     </div>
     <div class="modal-body">
-      <form method="POST" id="edit-form">
+      <form method="POST" id="edit-form" enctype="multipart/form-data">
         <div class="form-group">
           <label>Room Name</label>
           <input type="text" name="name" id="edit-name" required />
@@ -152,6 +165,15 @@ block content %}
             <option value="available">Available</option>
             <option value="maintenance">Maintenance</option>
           </select>
+        </div>
+        <div class="form-group">
+          <label>Room Photo (kosongkan jika tidak ingin ganti)</label>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            style="padding: 8px"
+          />
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%">
           Save Changes
