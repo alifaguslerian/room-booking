@@ -694,3 +694,9 @@ tbody td {
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
+
+.filter-btn.active {
+    background: var(--accent);
+    color: #0F0F0F;
+    border-color: var(--accent);
+}
