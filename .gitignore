@@ -8,3 +8,4 @@ venv/
 instance/
 app/static/img/rooms/*
 !app/static/img/rooms/.gitkeep
+.gitkeep

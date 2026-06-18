@@ -14,6 +14,7 @@ block content %}
   <table>
     <thead>
       <tr>
+        <th>Photo</th>
         <th>Name</th>
         <th>Location</th>
         <th>Capacity</th>
@@ -25,6 +26,37 @@ block content %}
     <tbody>
       {% for r in rooms %}
       <tr>
+        <td>
+          {% if r.image_path %}
+          <img
+            src="{{ url_for('static', filename=r.image_path) }}"
+            alt="{{ r.name }}"
+            style="
+              width: 60px;
+              height: 40px;
+              object-fit: cover;
+              border: 1px solid var(--border);
+              cursor: pointer;
+            "
+            onclick="openImagePreview('{{ url_for('static', filename=r.image_path) }}', '{{ r.name }}')"
+          />
+          {% else %}
+          <div
+            style="
+              width: 60px;
+              height: 40px;
+              background: var(--surface-2);
+              border: 1px solid var(--border);
+              display: grid;
+              place-items: center;
+              font-size: 9px;
+              color: var(--text-muted);
+            "
+          >
+            NO IMG
+          </div>
+          {% endif %}
+        </td>
         <td>{{ r.name }}</td>
         <td class="text-muted">{{ r.location }}</td>
         <td>{{ r.capacity }} pax</td>
@@ -63,7 +95,7 @@ block content %}
       {% else %}
       <tr>
         <td
-          colspan="6"
+          colspan="7"
           class="text-muted"
           style="text-align: center; padding: 24px"
         >
@@ -182,4 +214,30 @@ block content %}
     </div>
   </div>
 </div>
+
+<!-- Image Preview Modal -->
+<div class="modal-overlay" id="modal-image">
+  <div class="modal" style="width: 600px">
+    <div class="modal-header">
+      <h2 id="preview-title">Room Photo</h2>
+      <button class="modal-close" onclick="closeModal('modal-image')">
+        &times;
+      </button>
+    </div>
+    <div class="modal-body" style="padding: 0">
+      <img
+        id="preview-img"
+        src=""
+        alt=""
+        style="
+          width: 100%;
+          max-height: 400px;
+          object-fit: cover;
+          display: block;
+        "
+      />
+    </div>
+  </div>
+</div>
+
 {% endblock %}

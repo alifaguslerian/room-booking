@@ -23,3 +23,9 @@ document.addEventListener('click', function(e) {
         e.target.classList.remove('open');
     }
 });
+
+function openImagePreview(src, name) {
+    document.getElementById('preview-img').src = src;
+    document.getElementById('preview-title').textContent = name;
+    openModal('modal-image');
+}
